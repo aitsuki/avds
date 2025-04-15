@@ -61,9 +61,10 @@ jobs:
       - name: Generate checksums (Windows)
         if: matrix.os == 'windows-latest'
         run: |
-          certutil -hashfile "${{ env.BINARY_NAME }}" SHA256 | findstr /v "hash" > "${{ env.BINARY_NAME }}.sha256"
+          $hash = $(certutil -hashfile "${{ env.BINARY_NAME }}" SHA256)[1] -replace " ",""
+          Set-Content -Path "${{ env.BINARY_NAME }}.sha256" -Value "$hash  ${{ env.BINARY_NAME }}"
           echo "Generated SHA256 checksum for ${{ env.BINARY_NAME }}"
-        shell: bash
+        shell: pwsh
 
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
