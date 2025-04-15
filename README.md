@@ -52,6 +52,24 @@ Download the latest binary from [GitHub Releases](https://github.com/aitsuki/avd
 2. Select AVD using arrow keys
 3. Press Enter to launch in background
 
+## Troubleshooting
+
+### Emulator not found
+
+Ensure `ANDROID_SDK_ROOT` or `ANDROID_HOME` is correctly set and emulator is in PATH.
+
+### List is empty
+
+Create an AVD using Android Studio's AVD Manager first.
+
+### Permission denied
+
+Make sure the downloaded binary has execute permission:
+
+```shell
+chmod +x path/to/avds
+```
+
 ## Uninstallation
 
 ### Linux/macOS
