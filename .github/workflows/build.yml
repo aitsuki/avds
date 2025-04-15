@@ -1,0 +1,51 @@
+name: Cross-Platform Build
+
+on:
+  push:
+    tags:
+      - "*"
+
+jobs:
+  build:
+    name: Build
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+        arch: [amd64, arm64]
+        include:
+          - os: ubuntu-latest
+            ext: ""
+            platform: linux
+          - os: macos-latest
+            ext: ""
+            platform: darwin
+          - os: windows-latest
+            ext: ".exe"
+            platform: windows
+            
+    steps:
+      - uses: actions/checkout@v4
+  
+      - uses: actions/setup-go@v5
+        with:
+          go-version: "1.22"
+          check-latest: true
+  
+      - name: Build for ${{ matrix.platform }}/${{ matrix.arch }}
+        run: |
+          OUTPUT="avds-${{ matrix.platform }}-${{ matrix.arch }}${{ matrix.ext }}"
+          GOOS=${{ matrix.platform }} GOARCH=${{ matrix.arch }} \
+          go build -trimpath -ldflags "-s -w" -o $OUTPUT .
+          
+          # 生成校验文件
+          sha256sum $OUTPUT > $OUTPUT.sha256
+
+      - name: Upload Assets
+        uses: actions/upload-artifact@v4
+        with:
+          name: avds-binaries
+          path: |
+            avds-*
+            *.sha256
+
