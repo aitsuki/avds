@@ -37,9 +37,6 @@ jobs:
           OUTPUT="avds-${{ matrix.platform }}-${{ matrix.arch }}${{ matrix.ext }}"
           GOOS=${{ matrix.platform }} GOARCH=${{ matrix.arch }} \
           go build -trimpath -ldflags "-s -w" -o $OUTPUT .
-          
-          # 生成校验文件
-          sha256sum $OUTPUT > $OUTPUT.sha256
 
       - name: Upload Assets
         uses: actions/upload-artifact@v4
@@ -47,5 +44,3 @@ jobs:
           name: avds-binaries
           path: |
             avds-*
-            *.sha256
-
