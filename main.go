@@ -87,6 +87,8 @@ type model struct {
 	avds     []string
 	cursor   int
 	selected string
+	offset   int
+	maxLines int
 }
 
 func initialModel(emulatorPath string) model {
@@ -94,7 +96,7 @@ func initialModel(emulatorPath string) model {
 	if err != nil {
 		log.Fatalln(err)
 	}
-	return model{avds: avds}
+	return model{avds: avds, maxLines: 10}
 }
 
 func (m model) Init() tea.Cmd {
@@ -110,10 +112,22 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		case "up", "k":
 			if m.cursor > 0 {
 				m.cursor--
+			} else {
+				m.cursor = len(m.avds) - 1
+				m.offset = max(0, m.cursor-m.maxLines+1)
+			}
+			if m.cursor < m.offset {
+				m.offset = m.cursor
 			}
 		case "down", "j":
 			if m.cursor < len(m.avds)-1 {
 				m.cursor++
+			} else {
+				m.cursor = 0
+				m.offset = 0
+			}
+			if m.cursor >= m.offset+m.maxLines {
+				m.offset = m.cursor - m.maxLines + 1
 			}
 		case "enter":
 			m.selected = m.avds[m.cursor]
@@ -124,15 +138,31 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 }
 
 func (m model) View() string {
-	s := ""
-	for i, avd := range m.avds {
+	if len(m.avds) == 0 {
+		return "No AVDs available\n"
+	}
+
+	var lines []string
+	start := m.offset
+	end := min(m.offset+m.maxLines, len(m.avds))
+
+	if m.offset > 0 {
+		lines = append(lines, "  ...")
+	}
+
+	for i := start; i < end; i++ {
 		cursor := " "
 		if i == m.cursor {
-			cursor = "→"
+			cursor = ">"
 		}
-		s += fmt.Sprintf("%s %s\n", cursor, avd)
+		lines = append(lines, fmt.Sprintf("%s %s", cursor, m.avds[i]))
 	}
-	return s
+
+	if end < len(m.avds) {
+		lines = append(lines, "  ...")
+	}
+
+	return strings.Join(lines, "\n") + "\n"
 }
 
 func getEmulatorPath() (string, error) {
@@ -164,7 +194,8 @@ func listAvds(emulatorPath string) ([]string, error) {
 		return nil, err
 	}
 
-	lines := strings.Split(strings.TrimSpace(string(output)), "\n")
+	outputStr := strings.ReplaceAll(string(output), "\r\n", "\n")
+	lines := strings.Split(strings.TrimSpace(outputStr), "\n")
 	var avds []string
 	for _, line := range lines {
 		if line != "" {
@@ -173,7 +204,7 @@ func listAvds(emulatorPath string) ([]string, error) {
 	}
 
 	if len(avds) == 0 {
-		return nil, fmt.Errorf("no avaliable avds")
+		return nil, fmt.Errorf("no available avds")
 	}
 	return avds, nil
 }
