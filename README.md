@@ -1,17 +1,16 @@
 # avds - Android Virtual Device Launcher
 
 [![GitHub release](https://img.shields.io/github/release/aitsuki/avds.svg)](https://github.com/aitsuki/avds/releases)
-[![Go Report Card](https://goreportcard.com/badge/github.com/aitsuki/avds)](https://goreportcard.com/report/github.com/aitsuki/avds)
 [![License](https://img.shields.io/github/license/aitsuki/avds.svg)](LICENSE)
 
 Run Android emulator background from console.
 
 A lightweight command-line tool for managing Android emulators with interactive selection and background launching.
 
-## Features
+## Highlights
 
 - 🚀 Fast and lightweight command-line interface
-- 🔍 Interactive device selection using arrow keys
+- 🔍 Interactive device selection (keyboard nativation and filtering)
 - 🏃‍♂️ Background emulator launching
 - 🌈 Cross-platform support (Windows, macOS, Linux)
 - 🔧 Simple installation and usage
@@ -23,12 +22,6 @@ A lightweight command-line tool for managing Android emulators with interactive 
 - At least one AVD created via AVD Manager
 
 ## Installation
-
-### Using Go (all platforms)
-
-```shell
-go install github.com/aitsuki/avds@latest
-```
 
 ### Linux/macOS
 
@@ -42,6 +35,12 @@ curl -sfL https://raw.githubusercontent.com/aitsuki/avds/main/install.sh | sh
 iwr -useb https://raw.githubusercontent.com/aitsuki/avds/main/install.ps1 | iex
 ```
 
+### Using Go (all platforms)
+
+```shell
+go install github.com/aitsuki/avds@latest
+```
+
 ### Manual Installation
 
 Download the latest binary from [GitHub Releases](https://github.com/aitsuki/avds/releases).
@@ -49,26 +48,8 @@ Download the latest binary from [GitHub Releases](https://github.com/aitsuki/avd
 ## Usage
 
 1. Run `avds` to list available devices
-2. Select AVD using arrow keys
+2. Select an AVD (keyboard nativation or filtering)
 3. Press Enter to launch in background
-
-## Troubleshooting
-
-### Emulator not found
-
-Ensure `ANDROID_SDK_ROOT` or `ANDROID_HOME` is correctly set and emulator is in PATH.
-
-### List is empty
-
-Create an AVD using Android Studio's AVD Manager first.
-
-### Permission denied
-
-Make sure the downloaded binary has execute permission:
-
-```shell
-chmod +x path/to/avds
-```
 
 ## Uninstallation
 
