@@ -3,55 +3,15 @@ package main
 import (
 	"flag"
 	"fmt"
-	"log"
 	"os"
 	"runtime"
 
-	tea "github.com/charmbracelet/bubbletea"
+	"github.com/aitsuki/avds/emulator"
 )
 
 var (
 	Version = "dev"
 )
-
-func main() {
-	versionFlag := flag.Bool("version", false, "Show version information")
-	shortVersionFlag := flag.Bool("v", false, "Show version information")
-	helpFlag := flag.Bool("help", false, "Show help information")
-	shortHelpFlag := flag.Bool("h", false, "Show help information")
-
-	flag.Parse()
-
-	if *versionFlag || *shortVersionFlag {
-		printVersion()
-		os.Exit(0)
-	}
-
-	// Handle help flags
-	if *helpFlag || *shortHelpFlag {
-		printHelp()
-		os.Exit(0)
-	}
-
-	emulatorPath, err := getEmulatorPath()
-	if err != nil {
-		log.Fatalln(err)
-	}
-
-	p := tea.NewProgram(initialModel(emulatorPath))
-	m, err := p.Run()
-	if err != nil {
-		log.Fatalln(err)
-	}
-
-	finalModel := m.(model)
-	if finalModel.selected != "" {
-		err := startAvd(emulatorPath, finalModel.selected)
-		if err != nil {
-			log.Fatalln(err)
-		}
-	}
-}
 
 func printVersion() {
 	fmt.Printf(`avds %s
@@ -78,4 +38,29 @@ Examples:
   avds                    # Interactive AVD selection
   avds --version          # Show version info
 `)
+}
+
+func main() {
+	versionFlag := flag.Bool("version", false, "Show version information")
+	shortVersionFlag := flag.Bool("v", false, "Show version information")
+	helpFlag := flag.Bool("help", false, "Show help information")
+	shortHelpFlag := flag.Bool("h", false, "Show help information")
+
+	flag.Parse()
+
+	if *versionFlag || *shortVersionFlag {
+		printVersion()
+		os.Exit(0)
+	}
+
+	// Handle help flags
+	if *helpFlag || *shortHelpFlag {
+		printHelp()
+		os.Exit(0)
+	}
+
+	if err := emulator.Run(); err != nil {
+		fmt.Println("Error running program:", err)
+		os.Exit(1)
+	}
 }

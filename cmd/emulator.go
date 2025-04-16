@@ -1,4 +1,4 @@
-package main
+package cmd
 
 import (
 	"fmt"
@@ -9,7 +9,7 @@ import (
 	"strings"
 )
 
-func getEmulatorPath() (string, error) {
+func GetEmulatorPath() (string, error) {
 	sdkRoot := os.Getenv("ANDROID_SDK_ROOT")
 	if sdkRoot == "" {
 		sdkRoot = os.Getenv("ANDROID_HOME")
@@ -31,7 +31,7 @@ func getEmulatorPath() (string, error) {
 	return emulatorPath, nil
 }
 
-func listAvds(emulatorPath string) ([]string, error) {
+func ListAvds(emulatorPath string) ([]string, error) {
 	cmd := exec.Command(emulatorPath, "-list-avds")
 	output, err := cmd.Output()
 	if err != nil {
@@ -53,7 +53,7 @@ func listAvds(emulatorPath string) ([]string, error) {
 	return avds, nil
 }
 
-func startAvd(emulatorPath, avdName string) error {
+func StartAvd(emulatorPath, avdName string) error {
 	cmd := exec.Command(emulatorPath, "-avd", avdName)
 
 	setProcessAttributes(cmd)
