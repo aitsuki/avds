@@ -138,6 +138,7 @@ func Run() error {
 		if err != nil {
 			return fmt.Errorf("start avd: %w", err)
 		}
+		fmt.Printf("Starting %s, please wait...\n", avdName)
 	}
 	return nil
 }

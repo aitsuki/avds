@@ -51,6 +51,9 @@ Download the latest binary from [GitHub Releases](https://github.com/aitsuki/avd
 2. Select an AVD (keyboard nativation or filtering)
 3. Press Enter to launch in background
 
+> In Windows WSL, you can use `avds.exe` to run Android emulators from the
+> Windows Android SDK, rather than using the Android SDK installed in WSL.
+
 ## Uninstallation
 
 ### Linux/macOS
